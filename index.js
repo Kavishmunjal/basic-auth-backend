@@ -55,6 +55,29 @@ app.post("/signin", function (req,res){
 }
 );
 
-app.listen(3000);
+app.get("/me", function(req,res){
+const token = req.headers.token;
+let userfound = null;
 
+for(let i=0;i<users.length;i++){
+    if(users[i].token == token){
+       userfound = users[i];
+
+    }
+}
+
+if(userfound){
+    res.json({
+        username : userfound.username,
+        password : userfound.password
+    })
+}
+else{
+    res.json({
+        message : "user not found"
+     })
+ } 
+})
+
+app.listen(3000);
 
