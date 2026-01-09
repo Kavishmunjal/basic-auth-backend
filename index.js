@@ -22,6 +22,23 @@ res.send({
 })
 });
 
+function auth(req,res,next){
+const token = req.headers.token;
+const decodetoken = jwt.verify(token ,jwt_secret);
+const username = decodetoken.username;
+
+if(decodetoken.username){
+    req.username = decodetoken.username;
+    next();
+}
+else{
+    res.json({
+        message: "not yet loged in"
+    })
+}
+
+}
+
 app.post("/signin", function (req,res){
     const username = req.body.username;
     const password = req.body.password;
@@ -52,14 +69,12 @@ app.post("/signin", function (req,res){
 }
 );
 
-app.get("/me", function(req,res){
-const token = req.headers.token;
-const decodetoken = jwt.verify(token ,jwt_secret);
-const username = decodetoken.username;
+app.get("/me",auth, function(req,res){
+
 let userfound = null;
 
 for(let i=0;i<users.length;i++){
-    if(users[i].username == username){
+    if(users[i].username == req.username){
        userfound = users[i];
 
     }
