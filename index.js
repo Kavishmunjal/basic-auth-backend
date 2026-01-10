@@ -1,11 +1,15 @@
 const express = require('express');
 const jwt = require("jsonwebtoken");
 const app = express();
-const jwt_secret = "kavish"
+const jwt_secret = "kavish";
 
 app.use(express.json());
 
 const users = [];
+
+app.get("/", function(req,res){
+    res.sendFile(__dirname + "/public/index.html")
+})
 
 
 app.post("/signup", function (req,res){
@@ -58,8 +62,9 @@ app.post("/signin", function (req,res){
         userfound.token = token;
 
         res.json({
-            message : token
-        })
+            token: token
+        });
+        
     }
      else{
         res.status(403).send({
